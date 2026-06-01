@@ -1,0 +1,7 @@
+dist
+package-lock.json
+
+# Hand-maintained docs and project meta — not ours to reformat.
+docs
+*.md
+.claude
