@@ -10,7 +10,7 @@ interface ChordCellProps {
 }
 
 // Chord symbol & roman numeral derived from lib/music. Clicking
-// a cell opens the info box; the selected cell is highlighted
+// A cell opens the info box; the selected cell is highlighted
 function ChordCell({ chord, chartKey, isSelected, onSelect }: ChordCellProps) {
   return (
     <button

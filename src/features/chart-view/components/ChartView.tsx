@@ -2,6 +2,11 @@ import { useState } from 'react'
 import { type Chart } from '@/lib/music/types'
 import MeasureBox from './MeasureBox'
 import ChordInfoBox from './ChordInfoBox'
+import { Link } from 'react-router'
+import { ArrowLeft } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import ChartToolbar from './ChartToolbar'
+import { type Direction } from '@/lib/music/scale'
 
 interface ChartViewProps {
   chart: Chart
@@ -16,6 +21,9 @@ interface Selection {
 // when a chord is clicked -> an info box below with its arpeggio, scale, and guide tones
 function ChartView({ chart }: ChartViewProps) {
   const [selection, setSelection] = useState<Selection | null>(null)
+  const [clef, setClef] = useState<'treble' | 'bass'>('treble')
+  const [octaves, setOctaves] = useState(1)
+  const [direction, setDirection] = useState<Direction>('up')
 
   const selectedChord = selection
     ? chart.measures[selection.measureIndex].chords[selection.chordIndex]
@@ -32,6 +40,23 @@ function ChartView({ chart }: ChartViewProps) {
 
   return (
     <div className="mx-auto max-w-3xl p-4">
+      
+      <Button variant="ghost" size="sm" asChild>
+        <Link to="/">
+          <ArrowLeft />
+          Back
+        </Link>
+      </Button>
+
+      <ChartToolbar 
+        clef={clef} 
+        onClefChange={setClef}
+        octaves={octaves}
+        onOctavesChange={setOctaves}
+        direction={direction}
+        onDirectionChange={setDirection}
+      />
+
       <header className="mb-4 text-center">
         <h1 className="text-3xl font-bold tracking-tight text-foreground">
           {chart.title}
@@ -59,7 +84,13 @@ function ChartView({ chart }: ChartViewProps) {
       </div>
 
       {selectedChord && (
-        <ChordInfoBox chord={selectedChord} chartKey={chart.key} />
+        <ChordInfoBox 
+          chord={selectedChord} 
+          chartKey={chart.key} 
+          clef={clef}
+          octaves={octaves}
+          direction={direction}
+        />
       )}
     </div>
   )

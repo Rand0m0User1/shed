@@ -2,7 +2,7 @@ import { Link } from 'react-router'
 import { sampleCharts } from '@/lib/music/fixtures/sampleCharts'
 
 // Landing page. For now it lists the pre-loaded development charts as cards that
-// link to the chord chart (Plan Step 4). Upload buttons and per-chart delete
+// link to the chord chart. Upload buttons and per-chart delete
 // (the 3-dots menu) come later. So does login button.
 function HomePage() {
   return (
@@ -12,7 +12,7 @@ function HomePage() {
           Shed
         </h1>
         <p className="text-muted-foreground">
-          Music theory & jazz practice app
+          Music theory & jazz practice app.
         </p>
       </header>
 

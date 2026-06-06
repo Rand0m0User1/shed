@@ -5,17 +5,30 @@ import {
   getArpeggioNotes,
   getScaleNotes,
   getScaleDisplayName,
+  getScaleLine,
+  type Direction,
 } from '@/lib/music/scale'
+import AbcStaff from '@/lib/abc/AbcStaff'
 
 interface ChordInfoBoxProps {
   chord: Chord
   chartKey: string
+  clef: 'treble' | 'bass'
+  octaves?: number
+  direction?: Direction
 }
 
-// The text info box shown below the chart when a chord is selected.
-// All note data is DERIVED from lib/music. The
-// staff/abc version of the arpeggio + scale comes later
-function ChordInfoBox({ chord, chartKey }: ChordInfoBoxProps) {
+// Info box for the selected chord: text rows plus the scale on a staff.
+function ChordInfoBox({
+  chord,
+  chartKey,
+  clef,
+  octaves = 1,
+  direction = 'up',
+}: ChordInfoBoxProps) {
+  const baseOctave = clef === 'bass' ? 3 : 4
+  const scaleLine = getScaleLine(chord, { octaves, direction, baseOctave })
+
   return (
     <section className="mt-4 rounded-md border border-border bg-card p-4">
       <header className="mb-3 flex items-baseline gap-3">
@@ -38,6 +51,8 @@ function ChordInfoBox({ chord, chartKey }: ChordInfoBoxProps) {
           notes={getGuideTones(chord.symbol)}
         />
       </dl>
+
+      <AbcStaff notes={scaleLine} clef={clef} />
     </section>
   )
 }
