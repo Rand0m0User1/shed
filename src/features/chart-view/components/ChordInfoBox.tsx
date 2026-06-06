@@ -26,8 +26,7 @@ function ChordInfoBox({
   octaves = 1,
   direction = 'up',
 }: ChordInfoBoxProps) {
-  const baseOctave = clef === 'bass' ? 3 : 4
-  const scaleLine = getScaleLine(chord, { octaves, direction, baseOctave })
+  const scaleLine = getScaleLine(chord, { octaves, direction, clef })
 
   return (
     <section className="mt-4 rounded-md border border-border bg-card p-4">

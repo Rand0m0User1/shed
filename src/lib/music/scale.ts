@@ -38,8 +38,10 @@ export type Direction = 'up' | 'down' | 'updown'
 interface ScaleLineOptions {
   octaves: number
   direction: Direction
-  baseOctave: number
+  clef: 'treble' | 'bass'
 }
+
+const START_OCTAVE = { treble: 4, bass: 2 }
 
 // The scale as real pitches with octaves, for rendering on a staff: 1 or 2
 // octaves, ascending / descending / up-and-down. Tonal assigns the octaves.
@@ -48,11 +50,12 @@ export function getScaleLine(
   options: ScaleLineOptions,
 ): string[] {
   const root = chordRoot(chord.symbol)
+  const octave = START_OCTAVE[options.clef]
   const scaleName = `${root} ${resolveScaleMode(chord)}`
   const ascending = Scale.rangeOf(scaleName)(
-    `${root}${options.baseOctave}`,
-    `${root}${options.baseOctave + options.octaves}`,
-  )
+    `${root}${octave}`,
+    `${root}${octave + options.octaves}`,
+  ).filter((note): note is string => note !== undefined)
 
   if (options.direction === 'down') return [...ascending].reverse()
   if (options.direction === 'updown') {
