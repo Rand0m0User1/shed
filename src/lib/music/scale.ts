@@ -32,3 +32,31 @@ export function getArpeggioNotes(chord: ChartChord): string[] {
   const ninth = getScaleNotes(chord)[1]
   return ninth ? [...chordTones, ninth] : chordTones
 }
+
+export type Direction = 'up' | 'down' | 'updown'
+
+interface ScaleLineOptions {
+  octaves: number
+  direction: Direction
+  baseOctave: number
+}
+
+// The scale as real pitches with octaves, for rendering on a staff: 1 or 2
+// octaves, ascending / descending / up-and-down. Tonal assigns the octaves.
+export function getScaleLine(
+  chord: ChartChord,
+  options: ScaleLineOptions,
+): string[] {
+  const root = chordRoot(chord.symbol)
+  const scaleName = `${root} ${resolveScaleMode(chord)}`
+  const ascending = Scale.rangeOf(scaleName)(
+    `${root}${options.baseOctave}`,
+    `${root}${options.baseOctave + options.octaves}`,
+  )
+
+  if (options.direction === 'down') return [...ascending].reverse()
+  if (options.direction === 'updown') {
+    return [...ascending, ...[...ascending].reverse().slice(1)]
+  }
+  return ascending
+}
