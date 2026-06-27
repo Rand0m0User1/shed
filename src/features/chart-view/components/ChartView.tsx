@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { type Chart } from '@/lib/music/types'
 import MeasureBox from './MeasureBox'
 import ChordInfoBox from './ChordInfoBox'
@@ -37,6 +37,39 @@ function ChartView({ chart }: ChartViewProps) {
         : { measureIndex, chordIndex },
     )
   }
+
+  // Every chord in reading order, so arrow keys can move through them
+  const chordPositions = useMemo(
+    () =>
+      chart.measures.flatMap((measure, measureIndex) =>
+        measure.chords.map((_, chordIndex,) => ({ measureIndex, chordIndex})),
+    ),
+    [chart],
+  )
+
+  // Left/right arrows move the selection one chord at a time.
+  useEffect(() => {
+    function handleArrowKey(event: KeyboardEvent) {
+      if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return
+      event.preventDefault()
+      const step = event.key === 'ArrowRight' ? 1 : -1
+      setSelection((current) => {
+        const count = chordPositions.length
+        if (count === 0) return null
+        // From nothing: → starts at the first chord, ← at the last.
+        if (!current) return chordPositions[step === 1 ? 0 : count - 1]
+
+        const currentIndex = chordPositions.findIndex(
+          (position) =>
+            position.measureIndex === current.measureIndex &&
+            position.chordIndex === current.chordIndex,
+        )
+        return chordPositions[(currentIndex + step + count) % count]
+      })
+    }
+    window.addEventListener('keydown', handleArrowKey)
+    return () => window.removeEventListener('keydown', handleArrowKey)
+  }, [chordPositions])
 
   return (
     <div className="mx-auto max-w-3xl p-4">
