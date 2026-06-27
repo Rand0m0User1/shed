@@ -2,9 +2,7 @@ import { Chord, Scale } from 'tonal'
 import { type Chord as ChartChord } from './types'
 import { defaultScaleFor, getChordTones } from './chord'
 
-// The scale mode used for a chord, honoring the user's per-chord override first,
-// then the default-by-quality (skill rule #5 / BUILD_SPEC §6). The override field
-// already lives on the chord; the picker UI that sets it is a later feature.
+// The mode of the scale for a chord. The user may override the default via UI.
 export function resolveScaleMode(chord: ChartChord): string {
   return chord.scaleOverride ?? defaultScaleFor(chord.symbol)
 }
@@ -25,8 +23,7 @@ export function getScaleDisplayName(chord: ChartChord): string {
   return `${chordRoot(chord.symbol)} ${mode.charAt(0).toUpperCase()}${mode.slice(1)}`
 }
 
-// The arpeggio for the info box: chord tones (1·3·5·7) plus the 9th, which is the
-// 2nd degree of the resolved scale (BUILD_SPEC §13, Milestone 2).
+// Arpeggio: chord tones (1·3·5·7) plus the 9th (the scale's 2nd degree).
 export function getArpeggioNotes(chord: ChartChord): string[] {
   const chordTones = getChordTones(chord.symbol)
   const ninth = getScaleNotes(chord)[1]
@@ -41,16 +38,22 @@ interface ScaleLineOptions {
   clef: 'treble' | 'bass'
 }
 
-const START_OCTAVE = { treble: 4, bass: 2 }
+const START_OCTAVE: Record<'treble' | 'bass', Record<string, number>> = {
+  treble: { C: 4, D: 4, E: 4, F: 4, G: 4, A: 4, B: 4 },
+  bass: { C: 3, D: 2, E: 2, F: 2, G: 2, A: 2, B: 2 },
+}
 
-// The scale as real pitches with octaves, for rendering on a staff: 1 or 2
-// octaves, ascending / descending / up-and-down. Tonal assigns the octaves.
+function startOctave(root: string, clef: 'treble' | 'bass'): number {
+  return START_OCTAVE[clef][root[0]] ?? 4
+}
+
+// The scale as pitches with octaves for the staff: 1–2 octaves, up/down/up-down.
 export function getScaleLine(
   chord: ChartChord,
   options: ScaleLineOptions,
 ): string[] {
   const root = chordRoot(chord.symbol)
-  const octave = START_OCTAVE[options.clef]
+  const octave = startOctave(root, options.clef)
   const scaleName = `${root} ${resolveScaleMode(chord)}`
   const ascending = Scale.rangeOf(scaleName)(
     `${root}${octave}`,
