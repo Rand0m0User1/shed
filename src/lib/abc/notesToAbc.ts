@@ -1,8 +1,7 @@
 type Clef = 'treble' | 'bass'
 
-// Turns scientific-pitch notes from lib/music (e.g. "F4", "Bb4", "G#5") into an
-// abc string. Octaves are explicit in the input, so there's no octave guessing;
-// no key signature either (explicit accidentals).
+// Scientific-pitch notes (e.g. "F4", "Bb4") -> an abc string. Octaves are
+// explicit; no key signature (accidentals only).
 export function notesToAbc(notes: string[], options: { clef: Clef }): string {
   const tokens = notes.map(toAbcToken).filter((token) => token !== '')
   return [

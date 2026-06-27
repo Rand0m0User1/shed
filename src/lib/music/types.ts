@@ -1,10 +1,6 @@
-// The chart schema — the single contract every feature reads and writes.
-// This is BUILD_SPEC §4, transcribed faithfully; it is fixed (only the items in
-// §13 are deferred). Chords store a canonical Tonal-parseable symbol; jazz glyphs
-// (ø, °, △) are render-only. Notes, Roman numerals, and scales are DERIVED on
-// demand in lib/music — never stored here (§4.1).
-//
-// Bump SCHEMA_VERSION on any breaking change so Firestore migrations stay possible.
+// store a canonical Tonal-parseable symbol (no jazz glyphs ø/°/△; those are
+// render-only). Derive notes/Roman numerals/scales in lib/music; don't store them.
+// Bump SCHEMA_VERSION on any breaking change so migrations stay possible.
 
 export const SCHEMA_VERSION = 1
 
