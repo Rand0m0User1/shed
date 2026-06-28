@@ -22,7 +22,8 @@ interface Selection {
 function ChartView({ chart }: ChartViewProps) {
   const [selection, setSelection] = useState<Selection | null>(null)
   const [clef, setClef] = useState<'treble' | 'bass'>('treble')
-  const [octaves, setOctaves] = useState(1)
+  const [octaveStart, setOctaveStart] = useState(1)
+  const [octaveCount, setOctaveCount] = useState(1)
   const [direction, setDirection] = useState<Direction>('up')
 
   const selectedChord = selection
@@ -84,8 +85,10 @@ function ChartView({ chart }: ChartViewProps) {
       <ChartToolbar 
         clef={clef} 
         onClefChange={setClef}
-        octaves={octaves}
-        onOctavesChange={setOctaves}
+        octaveCount={octaveCount}
+        onOctaveCountChange={setOctaveCount}
+        octaveStart={octaveStart}
+        onOctaveStartChange={setOctaveStart}
         direction={direction}
         onDirectionChange={setDirection}
       />
@@ -121,7 +124,8 @@ function ChartView({ chart }: ChartViewProps) {
           chord={selectedChord} 
           chartKey={chart.key} 
           clef={clef}
-          octaves={octaves}
+          octaveStart={octaveStart}
+          octaveCount={octaveCount}
           direction={direction}
         />
       )}

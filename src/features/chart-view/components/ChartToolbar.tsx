@@ -11,8 +11,10 @@ import { type Direction } from '@/lib/music/scale'
 interface ChartToolbarProps {
   clef: 'treble' | 'bass'
   onClefChange: (clef: 'treble' | 'bass') => void
-  octaves: number
-  onOctavesChange: (octaves: number) => void
+  octaveCount: number
+  onOctaveCountChange: (count: number) => void
+  octaveStart: number
+  onOctaveStartChange: (start: number) => void
   direction: Direction
   onDirectionChange: (direction: Direction) => void
 }
@@ -20,8 +22,10 @@ interface ChartToolbarProps {
 function ChartToolbar({
   clef,
   onClefChange,
-  octaves,
-  onOctavesChange,
+  octaveCount,
+  onOctaveCountChange,
+  octaveStart,
+  onOctaveStartChange,
   direction,
   onDirectionChange,
 }: ChartToolbarProps) {
@@ -46,8 +50,8 @@ function ChartToolbar({
 
       <Setting label="Octaves">
         <Select
-          value={String(octaves)}
-          onValueChange={(value) => onOctavesChange(Number(value))}
+          value={String(octaveCount)}
+          onValueChange={(value) => onOctaveCountChange(Number(value))}
         >
           <SelectTrigger className="w-20">
             <SelectValue />
@@ -55,6 +59,23 @@ function ChartToolbar({
           <SelectContent>
             <SelectItem value="1">1</SelectItem>
             <SelectItem value="2">2</SelectItem>
+            <SelectItem value="3">3</SelectItem>
+          </SelectContent>
+        </Select>
+      </Setting>
+
+      <Setting label="Start">
+        <Select
+          value={String(octaveStart)}
+          onValueChange={(value) => onOctaveStartChange(Number(value))}
+        >
+          <SelectTrigger className="w-20">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="1">1st</SelectItem>
+            <SelectItem value="2">2nd</SelectItem>
+            <SelectItem value="3">3rd</SelectItem>
           </SelectContent>
         </Select>
       </Setting>

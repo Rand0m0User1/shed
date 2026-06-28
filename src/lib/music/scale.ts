@@ -33,14 +33,15 @@ export function getArpeggioNotes(chord: ChartChord): string[] {
 export type Direction = 'up' | 'down' | 'updown'
 
 interface ScaleLineOptions {
-  octaves: number
+  octaveStart: number
+  octaveCount: number
   direction: Direction
   clef: 'treble' | 'bass'
 }
 
 const START_OCTAVE: Record<'treble' | 'bass', Record<string, number>> = {
   treble: { C: 4, D: 4, E: 4, F: 4, G: 4, A: 4, B: 4 },
-  bass: { C: 3, D: 2, E: 2, F: 2, G: 2, A: 2, B: 2 },
+  bass: { C: 3, D: 3, E: 3, F: 2, G: 2, A: 2, B: 2 },
 }
 
 function startOctave(root: string, clef: 'treble' | 'bass'): number {
@@ -53,11 +54,11 @@ export function getScaleLine(
   options: ScaleLineOptions,
 ): string[] {
   const root = chordRoot(chord.symbol)
-  const octave = startOctave(root, options.clef)
+  const base = startOctave(root, options.clef) + (options.octaveStart - 1)
   const scaleName = `${root} ${resolveScaleMode(chord)}`
   const ascending = Scale.rangeOf(scaleName)(
-    `${root}${octave}`,
-    `${root}${octave + options.octaves}`,
+    `${root}${base}`,
+    `${root}${base + options.octaveCount}`,
   ).filter((note): note is string => note !== undefined)
 
   if (options.direction === 'down') return [...ascending].reverse()
